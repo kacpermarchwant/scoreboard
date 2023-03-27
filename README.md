@@ -8,5 +8,15 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+Link to the task -> https://remotecom.notion.site/Backend-code-exercise-d7df215ccb6f4d87a3ef865506763d50
+
+
+
+
+
+
+
+
+
 
 

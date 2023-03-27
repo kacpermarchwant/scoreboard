@@ -1,12 +1,13 @@
 defmodule Scoreboard.PointsUpdater do
   @moduledoc """
-  I want to run the update on a separate process. There are a few reasons for that:
+  I want to run the update on a separate process and there are a few reasons for that:
 
-  We want the operation to be async to not block the caller.
-  The database can fail, so we need a retry mechanism to ensure data integrity.
-  The process of updating points is hidden behind the interface.
+  1. We want the operation to be async to not block the caller.
+  2. The database can fail, so we need a retry mechanism to ensure data integrity.
+  3. The process of updating points is hidden behind the interface.
 
-  The abstraction is rather awkward and leaks the implementation details (you can see that clearly in tests), but I didn't want to set up a full-blown job scheduler for a take-home assignment.
+  The abstraction is rather awkward and leaks the implementation details (you can see that clearly in tests),
+  but I didn't want to set up a full-blown job scheduler for a take-home assignment.
   """
   use GenServer
 
