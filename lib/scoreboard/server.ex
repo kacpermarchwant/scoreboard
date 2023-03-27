@@ -1,4 +1,7 @@
 defmodule Scoreboard.Server do
+  @doc """
+  I don't do any snapshots of the GenServer state. If the process fails, we lose the session.
+  """
   use GenServer
 
   alias Scoreboard.User
@@ -11,7 +14,7 @@ defmodule Scoreboard.Server do
     GenServer.start_link(__MODULE__, nil, opts ++ [name: __MODULE__])
   end
 
-  def get_users_and_last_query_date do
+  def get_users_and_timestamp do
     GenServer.call(__MODULE__, :get_users)
   end
 
@@ -19,19 +22,18 @@ defmodule Scoreboard.Server do
   def init(_) do
     schedule_update()
 
-    {:ok, %{min_number: generate_min_number(), last_query_date: nil}}
+    {:ok, %{min_number: generate_min_number(), timestamp: nil}}
   end
 
   @impl true
   def handle_call(
         :get_users,
         _from,
-        %{min_number: min_number, last_query_date: last_query_date} = state
+        %{min_number: min_number, timestamp: timestamp} = state
       ) do
     users = User.get_users_with_more_points_than(min_number)
 
-    {:reply, %{users: users, last_query_date: last_query_date},
-     %{state | last_query_date: DateTime.utc_now()}}
+    {:reply, %{users: users, timestamp: timestamp}, %{state | timestamp: DateTime.utc_now()}}
   end
 
   @impl true

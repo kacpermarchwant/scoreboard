@@ -4,8 +4,8 @@ defmodule ScoreboardWeb.ScoreboardController do
   action_fallback ScoreboardWeb.FallbackController
 
   def home(conn, _params) do
-    %{users: users, last_query_date: last_query_date} = Scoreboard.get_users_and_last_query_date()
+    %{users: users, timestamp: timestamp} = Scoreboard.get_users_and_timestamp()
 
-    render(conn, :home, users: users, timestamp: last_query_date)
+    render(conn, :home, users: users, timestamp: timestamp)
   end
 end

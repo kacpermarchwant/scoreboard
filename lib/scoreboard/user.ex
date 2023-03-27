@@ -19,7 +19,7 @@ defmodule Scoreboard.User do
   end
 
   # The requirements do not mention anything about the order of the returned users,
-  # so the most obvious optimization would be to simply keep the two highest scores for a given batch in memory and only work with them,
+  # so the most obvious optimization would be to simply keep store in memory two users with the highest score for a given batch and only work with them,
   # but it's a bit hacky, so I went with a normal query.
   #
   # Plus, it's super fast anyway since we are pretty much guaranteed to fetch the date from the buffer and avoid disk access.
@@ -34,11 +34,10 @@ defmodule Scoreboard.User do
   #
   # We don't have any other writes,
   # and it doesn't impact reads (at least not on Read Committed Isolation Level).
-  # The number of rows is also relatively low, especially considering how small each row is.
+  # The number of rows is also relatively low, especially considering how small they are.
   #
   # And eventual batching would introduce problems with complexity
   # which may or may not be acceptable.
-  # I've written a few thoughts about the general design in README.
   def randomize_points do
     now = DateTime.utc_now()
     # We don't want a transaction here
