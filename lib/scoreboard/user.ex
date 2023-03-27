@@ -19,7 +19,7 @@ defmodule Scoreboard.User do
   end
 
   # The requirements do not mention anything about the order of the returned users,
-  # so the most obvious optimization would be to simply keep store in memory two users with the highest score for a given batch and only work with them,
+  # so the most obvious optimization would be to simply store in memory two users with the highest score for a given batch and only work with them,
   # but it's a bit hacky, so I went with a normal query.
   #
   # Plus, it's super fast anyway since we are pretty much guaranteed to fetch the date from the buffer and avoid disk access.
