@@ -1,12 +1,13 @@
 defmodule ScoreboardWeb.ScoreboardJsonTest do
   use ScoreboardWeb.ConnCase, async: true
 
-  alias Scoreboard.User
+  alias Scoreboard.Users
   alias ScoreboardWeb.ScoreboardJSON, as: Subject
 
   test "renders home" do
-    {:ok, user1} = User.create(%{points: 200})
-    {:ok, user2} = User.create(%{points: 300})
+    {:ok, user1} = Users.create(%{points: Users.max_points_value()})
+    {:ok, user2} = Users.create(%{points: Users.min_points_value()})
+
     now = DateTime.utc_now()
 
     assert %{timestamp: nil, users: users} =
