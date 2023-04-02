@@ -28,10 +28,15 @@ defmodule Scoreboard.Users.PointsUpdater do
   end
 
   @impl true
-  def init(_) do
+  def init(opts) do
+    update_function =
+      Keyword.get(opts, :update_function, fn min_val, max_val ->
+        User.randomize_points(min_val, max_val)
+      end)
+
     case PointsUpdate.last_overdue_update() do
       nil -> :ok
-      %{min_value: min_value, max_value: max_value} -> User.randomize_points(min_value, max_value)
+      %{min_value: min_value, max_value: max_value} -> update_function.(min_value, max_value)
     end
 
     {:ok, %{}}
