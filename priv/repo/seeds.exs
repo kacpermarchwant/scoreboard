@@ -19,5 +19,5 @@ user_params =
 user_params
 |> Enum.chunk_every(10_000)
 |> Enum.each(fn batch ->
-  Scoreboard.Repo.insert_all(Scoreboard.User, batch)
+  Scoreboard.Repo.insert_all(Scoreboard.Users.User, batch)
 end)

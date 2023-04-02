@@ -24,7 +24,7 @@ defmodule Scoreboard.Server do
   def init(opts \\ []) do
     update_interval = update_interval(opts)
 
-    schedule_update(update_interval, Users.update_points())
+    schedule_update(update_interval, fn -> Users.update_points() end)
 
     {:ok, %{min_number: generate_min_number(), timestamp: nil}}
   end

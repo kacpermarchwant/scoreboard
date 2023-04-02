@@ -22,7 +22,7 @@ defmodule Scoreboard.Users.PointsUpdater do
   # otherwise we don't have a guarantee that the update will actually happen
   def update_points() do
     # we want this call to be async, to not block the caller
-    GenServer.cast(__MODULE__, {:update_points, User.randomize_points()})
+    GenServer.cast(__MODULE__, {:update_points, fn -> User.randomize_points() end})
 
     :ok
   end
@@ -30,7 +30,7 @@ defmodule Scoreboard.Users.PointsUpdater do
   @impl true
   def init(opts) do
     update_function =
-      Keyword.get(opts, :update_function, fn min_val, max_val ->
+      Keyword.get(opts || [], :update_function, fn min_val, max_val ->
         User.randomize_points(min_val, max_val)
       end)
 
