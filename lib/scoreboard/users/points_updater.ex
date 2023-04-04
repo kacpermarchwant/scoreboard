@@ -1,4 +1,4 @@
-defmodule Scoreboard.PointsUpdater do
+defmodule Scoreboard.Users.PointsUpdater do
   @moduledoc """
   I want to run the update on a separate process and there are a few reasons for that:
 
@@ -11,32 +11,40 @@ defmodule Scoreboard.PointsUpdater do
   """
   use GenServer
 
-  alias Scoreboard.User
-  alias Scoreboard.PointsUpdate
+  alias Scoreboard.Users.User
+  alias Scoreboard.Users.PointsUpdate
 
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, nil, opts ++ [name: __MODULE__])
   end
 
-  def update_points do
+  # It's not a proper outbox pattern, we should insert points_update before returning
+  # otherwise we don't have a guarantee that the update will actually happen
+  def update_points() do
     # we want this call to be async, to not block the caller
-    GenServer.cast(__MODULE__, :update_points)
+    GenServer.cast(__MODULE__, {:update_points, fn -> User.randomize_points() end})
 
     :ok
   end
 
   @impl true
-  def init(_) do
-    if PointsUpdate.should_update_points?() do
-      User.randomize_points()
+  def init(opts) do
+    update_function =
+      Keyword.get(opts || [], :update_function, fn min_val, max_val ->
+        User.randomize_points(min_val, max_val)
+      end)
+
+    case PointsUpdate.last_overdue_update() do
+      nil -> :ok
+      %{min_value: min_value, max_value: max_value} -> update_function.(min_value, max_value)
     end
 
     {:ok, %{}}
   end
 
   @impl true
-  def handle_cast(:update_points, state) do
-    User.randomize_points()
+  def handle_cast({:update_points, update_function}, state) do
+    update_function.()
 
     {:noreply, state}
   end

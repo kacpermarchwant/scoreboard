@@ -1,5 +1,5 @@
 defmodule ScoreboardWeb.ScoreboardJSON do
-  alias Scoreboard.User
+  alias Scoreboard.Users.User
 
   def home(%{users: users, timestamp: timestamp}) do
     %{users: for(user <- users, do: serialize(user)), timestamp: timestamp}

@@ -8,6 +8,7 @@
 import Config
 
 config :scoreboard,
+  env: config_env(),
   ecto_repos: [Scoreboard.Repo]
 
 # Configures the endpoint
